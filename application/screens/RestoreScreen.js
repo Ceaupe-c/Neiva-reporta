@@ -7,29 +7,58 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  ActionSheetIOS,
 } from "react-native";
+import { Formik } from "formik";
 
 function RestoreScreen() {
   return (
     <SafeAreaView>
-      <ImageBackground
-        source={require("../assets/monumentoInicio.jpg")}
-        style={styles.fondoImagen}
+      <Formik
+        initialValues={{ email: "", emailConfirm: "" }}
+        onSubmit={(values, actions) => {
+          actions.resetForm();
+          console.log(values);
+        }}
       >
-        <View style={styles.contenedor}>
-          <Text style={styles.tituloTexto}>Recuperación de {"\n"}cuenta</Text>
-          <Text style={styles.tituloTexto}>________________</Text>
-          <View>
-            <Text style={styles.indicesTexto}>Correo electrónico</Text>
-            <TextInput style={styles.textoEntrada} />
-            <Text style={styles.indicesTexto}>Confirmar correo</Text>
-            <TextInput style={styles.textoEntrada} />
-            <TouchableOpacity style={styles.botonConfirmar}>
-              <Text style={styles.textoBotonConfirmar}>E N V I A R</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ImageBackground>
+        {(props) => (
+          <ImageBackground
+            source={require("../assets/monumentoInicio.jpg")}
+            style={styles.fondoImagen}
+          >
+            <View style={styles.contenedor}>
+              <Text style={styles.tituloTexto}>
+                Recuperación de {"\n"}cuenta
+              </Text>
+              <Text style={styles.tituloTexto}>________________</Text>
+              <View>
+                <Text style={styles.indicesTexto}>Correo electrónico</Text>
+                <TextInput
+                  style={styles.textoEntrada}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  onChangeText={props.handleChange("email")}
+                  value={props.values.email}
+                />
+                <Text style={styles.indicesTexto}>Confirmar correo</Text>
+                <TextInput
+                  style={styles.textoEntrada}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  onChangeText={props.handleChange("emailConfirm")}
+                  value={props.values.emailConfirm}
+                />
+                <TouchableOpacity
+                  style={styles.botonConfirmar}
+                  onPress={props.handleSubmit}
+                >
+                  <Text style={styles.textoBotonConfirmar}>E N V I A R</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ImageBackground>
+        )}
+      </Formik>
     </SafeAreaView>
   );
 }

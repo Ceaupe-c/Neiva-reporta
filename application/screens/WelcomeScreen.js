@@ -6,10 +6,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ImageBackground,
-  Alert,
 } from "react-native";
 
-function WelcomeScreen(props) {
+function WelcomeScreen({ navigation }) {
+  const presionarIniciar = () => {
+    navigation.navigate("LogIn");
+  };
+  const presionarRegistro = () => {
+    navigation.navigate("SignUp");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
@@ -28,13 +34,13 @@ function WelcomeScreen(props) {
           <View>
             <TouchableOpacity
               style={styles.botonVista}
-              onPress={() => Alert.alert(" En desarrollo bro")}
+              onPress={presionarIniciar}
             >
               <Text style={styles.textoBoton}>I N I C I O</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.botonVista}
-              onPress={() => Alert.alert(" En desarrollo lol")}
+              onPress={presionarRegistro}
             >
               <Text style={styles.textoBoton}>R E G I S T R O</Text>
             </TouchableOpacity>

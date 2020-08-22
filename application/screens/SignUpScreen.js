@@ -9,36 +9,78 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
 } from "react-native";
+import { Formik } from "formik";
 
-function SignUpScreen(props) {
+function SignUpScreen({ navigation }) {
+  const presionarCuenta = () => {
+    navigation.navigate("LogIn");
+  };
+
   return (
     <SafeAreaView>
-      <ImageBackground
-        source={require("../assets/monumentoInicio.jpg")}
-        style={styles.imagenFondo}
+      <Formik
+        initialValues={{ identidad: "", nombre: "", email: "", contra: "" }}
+        onSubmit={(values, actions) => {
+          actions.resetForm();
+          console.log(values);
+        }}
       >
-        <View style={styles.vistaPrincipal}>
-          <Text style={styles.textoTitulo}>Crear una cuenta {"\n"}nueva</Text>
-          <Text style={styles.textoTitulo}>_______________</Text>
+        {(props) => (
+          <ImageBackground
+            source={require("../assets/monumentoInicio.jpg")}
+            style={styles.imagenFondo}
+          >
+            <View style={styles.vistaPrincipal}>
+              <Text style={styles.textoTitulo}>
+                Crear una cuenta {"\n"}nueva
+              </Text>
+              <Text style={styles.textoTitulo}>_______________</Text>
 
-          <View>
-            <Text style={styles.textoIndices}>Documento de identidad</Text>
-            <TextInput style={styles.entradaTexto} />
-            <Text style={styles.textoIndices}>Nombres</Text>
-            <TextInput style={styles.entradaTexto} />
-            <Text style={styles.textoIndices}>Correo electrónico</Text>
-            <TextInput style={styles.entradaTexto} />
-            <Text style={styles.textoIndices}>Contraseña</Text>
-            <TextInput style={styles.entradaTexto} />
-            <TouchableOpacity style={styles.botonRegistro}>
-              <Text style={styles.textoRegistro}>R E G I S T R A R S E</Text>
-            </TouchableOpacity>
-            <TouchableNativeFeedback>
-              <Text style={styles.textoFinal}>¿Ya tienes una cuenta?</Text>
-            </TouchableNativeFeedback>
-          </View>
-        </View>
-      </ImageBackground>
+              <View>
+                <Text style={styles.textoIndices}>Documento de identidad</Text>
+                <TextInput
+                  style={styles.entradaTexto}
+                  keyboardType="number-pad"
+                  onChangeText={props.handleChange("identidad")}
+                  value={props.values.identidad}
+                />
+                <Text style={styles.textoIndices}>Nombres</Text>
+                <TextInput
+                  style={styles.entradaTexto}
+                  onChangeText={props.handleChange("nombre")}
+                  value={props.values.nombre}
+                />
+                <Text style={styles.textoIndices}>Correo electrónico</Text>
+                <TextInput
+                  style={styles.entradaTexto}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  onChangeText={props.handleChange("email")}
+                  value={props.values.email}
+                />
+                <Text style={styles.textoIndices}>Contraseña</Text>
+                <TextInput
+                  style={styles.entradaTexto}
+                  secureTextEntry
+                  onChangeText={props.handleChange("contra")}
+                  value={props.values.contra}
+                />
+                <TouchableOpacity
+                  style={styles.botonRegistro}
+                  onPress={props.handleSubmit}
+                >
+                  <Text style={styles.textoRegistro}>
+                    R E G I S T R A R S E
+                  </Text>
+                </TouchableOpacity>
+                <TouchableNativeFeedback onPress={presionarCuenta}>
+                  <Text style={styles.textoFinal}>¿Ya tienes una cuenta?</Text>
+                </TouchableNativeFeedback>
+              </View>
+            </View>
+          </ImageBackground>
+        )}
+      </Formik>
     </SafeAreaView>
   );
 }

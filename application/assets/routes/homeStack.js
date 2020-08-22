@@ -4,6 +4,7 @@ import WelcomeScreen from "../../screens/WelcomeScreen";
 import LogInScreen from "../../screens/LogInScreen";
 import SignUpScreen from "../../screens/SignUpScreen";
 import RestoreScreen from "../../screens/RestoreScreen";
+import UserView from "../../screens/UserView";
 
 const screens = {
   Welcome: {
@@ -17,6 +18,9 @@ const screens = {
   },
   Restore: {
     screen: RestoreScreen,
+  },
+  User: {
+    screen: UserView,
   },
 };
 

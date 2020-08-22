@@ -9,31 +9,64 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
 } from "react-native";
+import { Formik } from "formik";
 
-function LogInScreen(props) {
+function LogInScreen({ navigation }) {
+  const presionarOlvidar = () => {
+    navigation.navigate("Restore");
+  };
+
   return (
     <SafeAreaView style={styles.vistaPrincipal}>
       <ImageBackground
         source={require("../assets/monumentoInicio.jpg")}
         style={styles.image}
       >
-        <View style={styles.vistaPrincipal}>
-          <Text style={styles.textoTop}>Inicia sesión en tu {"\n"} cuenta</Text>
-          <Text style={styles.textoTop}>___________________</Text>
+        <Formik
+          initialValues={{ email: "", contra: "" }}
+          onSubmit={(values, actions) => {
+            actions.resetForm();
+            console.log(values);
+          }}
+        >
+          {(props) => (
+            <View style={styles.vistaPrincipal}>
+              <Text style={styles.textoTop}>
+                Inicia sesión en tu {"\n"} cuenta
+              </Text>
+              <Text style={styles.textoTop}>___________________</Text>
 
-          <View>
-            <Text style={styles.textotitulos}> Correo Electrónico </Text>
-            <TextInput style={styles.inputTexto} keyboardType="email-address" />
-            <Text style={styles.textotitulos}> Contraseña</Text>
-            <TextInput style={styles.inputTexto} />
-            <TouchableOpacity style={styles.botonIniciar}>
-              <Text style={styles.textoTop}>I N I C I A R</Text>
-            </TouchableOpacity>
-            <TouchableNativeFeedback>
-              <Text style={styles.textoFoot}>¿Olvidaste tu contraseña?</Text>
-            </TouchableNativeFeedback>
-          </View>
-        </View>
+              <View>
+                <Text style={styles.textotitulos}> Correo Electrónico </Text>
+                <TextInput
+                  style={styles.inputTexto}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  onChangeText={props.handleChange("email")}
+                  value={props.values.email}
+                />
+                <Text style={styles.textotitulos}> Contraseña</Text>
+                <TextInput
+                  style={styles.inputTexto}
+                  secureTextEntry
+                  onChangeText={props.handleChange("contra")}
+                  value={props.values.contra}
+                />
+                <TouchableOpacity
+                  style={styles.botonIniciar}
+                  onPress={props.handleSubmit}
+                >
+                  <Text style={styles.textoTop}>I N I C I A R</Text>
+                </TouchableOpacity>
+                <TouchableNativeFeedback onPress={presionarOlvidar}>
+                  <Text style={styles.textoFoot}>
+                    ¿Olvidaste tu contraseña?
+                  </Text>
+                </TouchableNativeFeedback>
+              </View>
+            </View>
+          )}
+        </Formik>
       </ImageBackground>
     </SafeAreaView>
   );
