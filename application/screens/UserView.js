@@ -10,13 +10,15 @@ import {
 import { Formik } from "formik";
 
 function UserView({ navigation }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const identidad = navigation.getParam("identidad", "no identidad");
   const nombre = navigation.getParam("nombre", "no identidad");
 
   return (
     <View>
-      <Modal visible={false}>
-        <Text>Sex duro por ahora</Text>
+      <Modal visible={modalOpen}>
+        <Text></Text>
       </Modal>
 
       <View style={styles.container0}>
