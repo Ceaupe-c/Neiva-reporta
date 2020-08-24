@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -27,6 +27,10 @@ function LogInScreen({ navigation }) {
           onSubmit={(values, actions) => {
             actions.resetForm();
             console.log(values);
+            navigation.navigate("User", {
+              email: values.email,
+              contra: values.contra,
+            });
           }}
         >
           {(props) => (

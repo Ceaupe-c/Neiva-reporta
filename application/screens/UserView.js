@@ -1,26 +1,41 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import { Formik } from "formik";
-import { greaterThan } from "react-native-reanimated";
 
 function UserView({ navigation }) {
-  const presionarOlvidar = () => {
-    navigation.navigate("Restore");
-  };
+  const identidad = navigation.getParam("identidad", "no identidad");
+  const nombre = navigation.getParam("nombre", "no identidad");
 
   return (
     <View>
+      <Modal visible={false}>
+        <Text>Sex duro por ahora</Text>
+      </Modal>
+
       <View style={styles.container0}>
         <Text style={styles.textoUser}>
-          JUANCHO HIJUEPUTA{"\n"} PERRO PIROBO{"\n"}
+          {nombre}
+          {"\n"} {identidad}
+          {"\n"}
         </Text>
+        <TouchableOpacity>
+          <Text></Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.linestyle}> ___________________________{"\n"}</Text>
+      <Text style={styles.linestyle}>
+        {" "}
+        __________________________________{"\n"}
+      </Text>
       <View style={styles.container1}>
-        <Text style={styles.textoUser2}>
-          JUANCHO HIJUEPUTA{"\n"} PERRO PIROBO{"\n"}
-        </Text>
-        <TextInput style={styles.inputTexto}></TextInput>
+        <Text style={styles.textoUser2}>Ingresar Reporte{"\n"}</Text>
+        <TextInput style={styles.inputTexto} multiline />
       </View>
     </View>
   );
@@ -77,10 +92,10 @@ const styles = StyleSheet.create({
   inputTexto: {
     backgroundColor: "#fff",
     borderRadius: 30,
-    width: 270,
-    height: 60,
+    width: "90%",
+    height: "60%",
     margin: 20,
-    fontSize: 20,
+    fontSize: 15,
     textAlign: "center",
   },
 });
