@@ -6,69 +6,122 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  Image,
+  Alert,
 } from "react-native";
-
 import { Formik } from "formik";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 
 function UserView({ navigation }) {
-  const [modalOpen, setModalOpen] = useState(false);
-
   const identidad = navigation.getParam("identidad", "no identidad");
-  const nombre = navigation.getParam("nombre", "no identidad");
+  const nombre = navigation.getParam("nombre", "Anónimo");
+  const contra = navigation.getParam("contra");
+  const email = navigation.getParam("email");
 
+  const presionarEditar = () => {
+    navigation.navigate("UserEdit", {
+      identidad: identidad,
+      nombre: nombre,
+      contra: contra,
+      email: email,
+    });
+  };
+
+  const presionarCancelar = () => {
+    setModalOpen(false);
+  };
+
+  const [modalOpen, setModalOpen] = useState(false);
   const [reports, setReport] = useState([{ content: "" }]);
+  const [picture, setPicture] = useState(false);
+
+  const addReport = () => {
+    setReport((report) => {
+      return [report];
+    });
+    setModalOpen(false);
+  };
+
+  const picFromGallery = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    if (granted) {
+      let data = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      console.log(data);
+    } else {
+      Alert.alert("Se necesita permiso para acceder a la galería");
+    }
+  };
+
+  const picFromCamera = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA);
+    if (granted) {
+      let data = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      console.log(data);
+    } else {
+      Alert.alert("Se necesita permiso para acceder a la cámara");
+    }
+  };
 
   return (
     <View>
       <Modal visible={modalOpen} animationType="slide">
-        <View style={styles.container1}>
-          <View style={styles.iconcont}>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/rayo.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/la-carretera.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/grifo-de-agua.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/gas.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/camion-de-la-basura.png")}
-            ></Image>
-          </View>
-          <TextInput style={styles.inputTexto} multiline />
-          <View style={styles.iconcont}>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/camara.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/marcador-de-posicion.png")}
-            ></Image>
-            <Image
-              style={styles.iconstyle}
-              source={require("../assets/galeria.png")}
-            ></Image>
-            <TouchableOpacity
-              style={styles.botonPublicar}
-              onPress={() => {
-                setModalOpen(false);
-              }}
-            >
-              <Text style={styles.textoBtn}> PUBLICAR </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Formik
+          initialValues={{ content: "" }}
+          onSubmit={(values, actions) => {
+            addReport(values);
+            console.log(values);
+            actions.resetForm();
+            setModalOpen(false);
+          }}
+        >
+          {(props) => (
+            <View>
+              <View style={styles.container1}>
+                <Text style={styles.textoUser2}>Ingresar Reporte{"\n"}</Text>
+                <TextInput
+                  style={styles.inputTexto}
+                  multiline
+                  value={props.values.content}
+                  onChangeText={props.handleChange("content")}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.textoBotonesModal}
+                onPress={picFromCamera}
+              >
+                <Text>Tomar foto</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.textoBotonesModal}
+                onPress={picFromGallery}
+              >
+                <Text>Buscar imagen</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.textoBotonesModal}
+                onPress={props.handleSubmit}
+              >
+                <Text>Enviar Reporte</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.textoBotonesModal}
+                onPress={presionarCancelar}
+              >
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Formik>
       </Modal>
 
       <View style={styles.container0}>
@@ -77,16 +130,9 @@ function UserView({ navigation }) {
           {"\n"} {identidad}
           {"\n"}
         </Text>
-        <View style={styles.contstyle}>
-          <Image
-            style={styles.image}
-            source={require("../assets/usuario.png")}
-          ></Image>
-          <Image
-            style={styles.image}
-            source={require("../assets/mas.png")}
-          ></Image>
-        </View>
+        <TouchableOpacity onPress={presionarEditar}>
+          <Text>ir a editar usuario</Text>
+        </TouchableOpacity>
       </View>
       <Text style={styles.linestyle}>
         {" "}
@@ -95,6 +141,7 @@ function UserView({ navigation }) {
 
       <View style={styles.container3}>
         <TouchableOpacity
+          style={styles.textoBotonesModal}
           onPress={() => {
             setModalOpen(true);
           }}
@@ -119,10 +166,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
+    position: "relative",
   },
   container1: {
-    height: 320,
-    width: 350,
+    height: 250,
     backgroundColor: "#e2ddd0",
     justifyContent: "center",
     alignItems: "center",
@@ -134,48 +181,16 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
   },
-  iconcont: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    height: 40,
-    width: 260,
-  },
-  contstyle: {
-    height: "10%",
-    width: "30%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  iconstyle: {
-    width: "15%",
-    height: "100%",
-  },
   image: {
-    width: "25%",
+    justifyContent: "center",
+    width: "100%",
     height: "100%",
-  },
-  botonPublicar: {
-    alignItems: "center",
-    borderRadius: 35,
-    backgroundColor: "#4EFF85",
-    width: 110,
-    height: 40,
-    justifyContent: "space-around",
   },
   linestyle: {
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
     textAlign: "center",
-  },
-  textoBtn: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    margin: 5,
   },
   textoUser2: {
     color: "#000",
@@ -194,10 +209,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 30,
     width: "90%",
-    height: "50%",
+    height: "60%",
     margin: 20,
     fontSize: 15,
     textAlign: "center",
+  },
+  textoBotonesModal: {
+    alignItems: "center",
+    borderRadius: 35,
+    backgroundColor: "#99F98D",
+    margin: 10,
+    width: 130,
+    height: 40,
+    justifyContent: "center",
   },
 });
 

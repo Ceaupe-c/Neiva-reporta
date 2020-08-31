@@ -21,7 +21,6 @@ function WelcomeScreen({ navigation }) {
       <ImageBackground
         source={require("../assets/monumentoInicio.jpg")}
         style={styles.image}
-        resizeMode="cover"
         fadeDuration={1000}
       >
         <View style={styles.container}>

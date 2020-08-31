@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 import { Formik } from "formik";
+import * as yup from "yup";
 
 function SignUpScreen({ navigation }) {
   const presionarCuenta = () => {
@@ -20,6 +21,12 @@ function SignUpScreen({ navigation }) {
     <SafeAreaView>
       <Formik
         initialValues={{ identidad: "", nombre: "", email: "", contra: "" }}
+        validationSchema={yup.object().shape({
+          identidad: yup.string().required("identidad requerida"),
+          nombre: yup.string().required("nombre es requerido"),
+          email: yup.string().email().required("email es requerido"),
+          contra: yup.string().required("contraseña requerida"),
+        })}
         onSubmit={(values, actions) => {
           actions.resetForm();
           console.log(values);
@@ -50,12 +57,14 @@ function SignUpScreen({ navigation }) {
                   onChangeText={props.handleChange("identidad")}
                   value={props.values.identidad}
                 />
+                <Text>{props.errors.identidad}</Text>
                 <Text style={styles.textoIndices}>Nombres</Text>
                 <TextInput
                   style={styles.entradaTexto}
                   onChangeText={props.handleChange("nombre")}
                   value={props.values.nombre}
                 />
+                <Text>{props.errors.nombre}</Text>
                 <Text style={styles.textoIndices}>Correo electrónico</Text>
                 <TextInput
                   style={styles.entradaTexto}
@@ -64,6 +73,7 @@ function SignUpScreen({ navigation }) {
                   onChangeText={props.handleChange("email")}
                   value={props.values.email}
                 />
+                <Text>{props.errors.email}</Text>
                 <Text style={styles.textoIndices}>Contraseña</Text>
                 <TextInput
                   style={styles.entradaTexto}
@@ -71,6 +81,7 @@ function SignUpScreen({ navigation }) {
                   onChangeText={props.handleChange("contra")}
                   value={props.values.contra}
                 />
+                <Text>{props.errors.contra}</Text>
                 <TouchableOpacity
                   style={styles.botonRegistro}
                   onPress={props.handleSubmit}
@@ -111,15 +122,15 @@ const styles = StyleSheet.create({
   },
   textoIndices: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
     textAlign: "left",
   },
   entradaTexto: {
     backgroundColor: "#fff",
     borderRadius: 30,
     width: 280,
-    height: 60,
-    margin: 5,
+    height: 50,
+    margin: 0,
     fontSize: 20,
     textAlign: "center",
   },
@@ -128,7 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: "bold",
     textAlign: "center",
-    margin: 5,
+    margin: 3,
   },
   botonRegistro: {
     alignItems: "center",

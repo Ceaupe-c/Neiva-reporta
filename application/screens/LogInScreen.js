@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 import { Formik } from "formik";
+import * as yup from "yup";
 
 function LogInScreen({ navigation }) {
   const presionarOlvidar = () => {
@@ -24,6 +25,10 @@ function LogInScreen({ navigation }) {
       >
         <Formik
           initialValues={{ email: "", contra: "" }}
+          validationSchema={yup.object().shape({
+            email: yup.string().email().required(),
+            contra: yup.string().required(),
+          })}
           onSubmit={(values, actions) => {
             actions.resetForm();
             console.log(values);
@@ -49,6 +54,7 @@ function LogInScreen({ navigation }) {
                   onChangeText={props.handleChange("email")}
                   value={props.values.email}
                 />
+                <Text>{props.errors.email}</Text>
                 <Text style={styles.textotitulos}> Contraseña</Text>
                 <TextInput
                   style={styles.inputTexto}
@@ -56,6 +62,7 @@ function LogInScreen({ navigation }) {
                   onChangeText={props.handleChange("contra")}
                   value={props.values.contra}
                 />
+                <Text>{props.errors.contra}</Text>
                 <TouchableOpacity
                   style={styles.botonIniciar}
                   onPress={props.handleSubmit}

@@ -7,15 +7,19 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  ActionSheetIOS,
 } from "react-native";
 import { Formik } from "formik";
+import * as yup from "yup";
 
 function RestoreScreen() {
   return (
     <SafeAreaView>
       <Formik
         initialValues={{ email: "", emailConfirm: "" }}
+        validationSchema={yup.object().shape({
+          email: yup.string().email(),
+          emailConfirm: yup.string().email().required("email es requerido"),
+        })}
         onSubmit={(values, actions) => {
           actions.resetForm();
           console.log(values);
@@ -40,6 +44,7 @@ function RestoreScreen() {
                   onChangeText={props.handleChange("email")}
                   value={props.values.email}
                 />
+                <Text>{props.errors.email}</Text>
                 <Text style={styles.indicesTexto}>Confirmar correo</Text>
                 <TextInput
                   style={styles.textoEntrada}
@@ -48,6 +53,7 @@ function RestoreScreen() {
                   onChangeText={props.handleChange("emailConfirm")}
                   value={props.values.emailConfirm}
                 />
+                <Text>{props.errors.emailConfirm}</Text>
                 <TouchableOpacity
                   style={styles.botonConfirmar}
                   onPress={props.handleSubmit}
